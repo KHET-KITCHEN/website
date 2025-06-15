@@ -17,10 +17,15 @@ const About = () => {
             Our Story
           </Typography>
           <Typography variant="body1" paragraph align="center" sx={{ maxWidth: 800, mx: 'auto', mb: 6, textIndent: '2em', textAlign: 'justify' }}>
-            Khet2Kitchen Organics was born from a simple yet powerful vision: to bring pure, organic products
-            directly from the farm to your kitchen. We believe in the traditional methods of farming and
-            processing that have been passed down through generations, ensuring that every product maintains
-            its natural goodness and nutritional value.
+          In today’s world, organic and natural products are often sold at a premium—making them inaccessible to the average person. At our core, we believe that good health should never be a luxury. Our mission is to make pure, chemical-free, and traditionally made organic products affordable for everyone, without compromising on quality.
+          India has always been known for its rich heritage of wholesome, unadulterated food. From the oils we used to cook with to the jaggery that sweetened our meals, our diets were once filled with purity and natural goodness. But over time, as industrial processes took over to meet rising demand, chemicals and artificial additives became the norm.
+
+We aim to change that.
+
+By minimizing profit margins and focusing on sustainable, traditional methods of production, we bring you products that are truly natural—free from harmful chemicals and excessive processing. Our goal is simple: to help every Indian household return to a healthier, more authentic way of living.
+
+Together, let’s make India healthier—one pure product at a time.
+
           </Typography>
         </motion.div>
 
