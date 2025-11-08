@@ -26,7 +26,8 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useCart } from '../context/CartContext';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+// Force production URL if environment variable is not set
+const API_BASE_URL = 'https://server-deploy-production-66f8.up.railway.app';
 
 const Checkout = () => {
   const { cartItems, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
@@ -89,6 +90,10 @@ const Checkout = () => {
 
     setLoading(true);
     setError('');
+    
+    // Debug logging
+    console.log('API URL:', API_BASE_URL);
+    console.log('Making request to:', `${API_BASE_URL}/api/create-order`);
 
     try {
       // Load Razorpay script
@@ -100,10 +105,18 @@ const Checkout = () => {
       }
 
       // Create order on backend
+      console.log('Sending payment request with data:', {
+        amount: getTotalPrice(),
+        currency: 'INR',
+        items: cartItems,
+        customer: customerInfo
+      });
+
       const response = await fetch(`${API_BASE_URL}/api/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           amount: getTotalPrice(),
@@ -124,6 +137,9 @@ const Checkout = () => {
             pincode: customerInfo.pincode,
           },
         }),
+      }).catch(error => {
+        console.error('Network error:', error);
+        throw new Error('Network error: Unable to connect to the server');
       });
 
       if (!response.ok) {
