@@ -73,7 +73,7 @@ const Products = () => {
       id: 6,
       name: 'Organic Turmeric Powder',
       description: 'Pure turmeric powder made from organically grown turmeric',
-      price: 250,
+      price: 1,
       category: 'Spices',
       image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80',
     },
