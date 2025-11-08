@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -13,14 +13,19 @@ import {
   Box,
   useTheme,
   useMediaQuery,
+  Badge,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import mascot from '/images/mascot.png';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { getTotalItems } = useCart();
+  const navigate = useNavigate();
 
   const menuItems = [
     { text: 'Home', path: '/' },
@@ -46,6 +51,23 @@ const Navbar = () => {
           <ListItemText primary={item.text} />
         </ListItem>
       ))}
+      <ListItem
+        button
+        onClick={() => {
+          navigate('/checkout');
+          handleDrawerToggle();
+        }}
+      >
+        <ListItemText
+          primary={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <ShoppingCartIcon />
+              Cart
+              <Badge badgeContent={getTotalItems()} color="secondary" sx={{ ml: 1 }} />
+            </Box>
+          }
+        />
+      </ListItem>
     </List>
   );
 
@@ -93,7 +115,7 @@ const Navbar = () => {
             </Drawer>
           </>
         ) : (
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             {menuItems.map((item) => (
               <Button
                 key={item.text}
@@ -104,6 +126,15 @@ const Navbar = () => {
                 {item.text}
               </Button>
             ))}
+            <IconButton
+              color="inherit"
+              onClick={() => navigate('/checkout')}
+              sx={{ ml: 1 }}
+            >
+              <Badge badgeContent={getTotalItems()} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
           </Box>
         )}
       </Toolbar>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -12,63 +13,76 @@ import {
   Chip,
   TextField,
   InputAdornment,
+  IconButton,
+  Badge,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { motion } from 'framer-motion';
+import { useCart } from '../context/CartContext';
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const { addToCart, cartItems, updateQuantity } = useCart();
+  const navigate = useNavigate();
 
   const products = [
     {
       id: 1,
       name: 'Cold Pressed Mustard Oil',
       description: 'Pure, organic, and unrefined mustard oil extracted using traditional methods',
-      price: '₹450',
+      price: 450,
       category: 'Oils',
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80', // oil bottle
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: 2,
       name: 'Organic Jaggery',
       description: 'Traditional, unprocessed jaggery made from pure sugarcane juice',
-      price: '₹200',
+      price: 200,
       category: 'Sweeteners',
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80', // brown sugar cubes (jaggery lookalike)
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: 3,
       name: 'Cold Pressed Sesame Oil',
       description: 'Pure sesame oil, rich in nutrients and antioxidants',
-      price: '₹500',
+      price: 500,
       category: 'Oils',
-      image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80', // sesame oil
+      image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: 4,
       name: 'Organic Honey',
       description: 'Pure, raw honey collected from our organic beehives',
-      price: '₹350',
+      price: 350,
       category: 'Sweeteners',
-      image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80', // honey
+      image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: 5,
       name: 'Cold Pressed Groundnut Oil',
       description: 'Pure groundnut oil extracted using traditional methods',
-      price: '₹400',
+      price: 400,
       category: 'Oils',
-      image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80', // oil bottle with peanuts
+      image: 'https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=400&q=80',
     },
     {
       id: 6,
       name: 'Organic Turmeric Powder',
       description: 'Pure turmeric powder made from organically grown turmeric',
-      price: '₹250',
+      price: 250,
       category: 'Spices',
-      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80', // turmeric (using oil img as placeholder)
+      image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80',
     },
   ];
+
+  const getQuantityInCart = (productId) => {
+    const item = cartItems.find((item) => item.id === productId);
+    return item ? item.quantity : 0;
+  };
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -87,8 +101,8 @@ const Products = () => {
           to preserve their natural goodness and nutritional value.
         </Typography>
 
-        {/* Search Bar */}
-        <Box sx={{ mb: 4 }}>
+        {/* Search Bar and Cart Button */}
+        <Box sx={{ mb: 4, display: 'flex', gap: 2, alignItems: 'center' }}>
           <TextField
             fullWidth
             variant="outlined"
@@ -103,6 +117,19 @@ const Products = () => {
               ),
             }}
           />
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={
+              <Badge badgeContent={cartItems.reduce((sum, item) => sum + item.quantity, 0)} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            }
+            onClick={() => navigate('/checkout')}
+            sx={{ minWidth: 150 }}
+          >
+            View Cart
+          </Button>
         </Box>
 
         {/* Products Grid */}
@@ -136,16 +163,42 @@ const Products = () => {
                       {product.description}
                     </Typography>
                     <Typography variant="h6" color="primary">
-                      {product.price}
+                      ₹{product.price}
                     </Typography>
                   </CardContent>
-                  <CardActions>
-                    <Button size="small" color="primary">
-                      Learn More
-                    </Button>
-                    <Button size="small" color="primary" variant="contained">
-                      Contact for Order
-                    </Button>
+                  <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
+                    {getQuantityInCart(product.id) === 0 ? (
+                      <Button
+                        size="small"
+                        color="primary"
+                        variant="contained"
+                        fullWidth
+                        onClick={() => addToCart(product)}
+                        startIcon={<AddIcon />}
+                      >
+                        Add to Cart
+                      </Button>
+                    ) : (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, width: '100%' }}>
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={() => updateQuantity(product.id, getQuantityInCart(product.id) - 1)}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+                        <Typography variant="body1" sx={{ minWidth: 30, textAlign: 'center' }}>
+                          {getQuantityInCart(product.id)}
+                        </Typography>
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          onClick={() => updateQuantity(product.id, getQuantityInCart(product.id) + 1)}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </Box>
+                    )}
                   </CardActions>
                 </Card>
               </motion.div>
