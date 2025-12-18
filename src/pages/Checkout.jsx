@@ -27,7 +27,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useCart } from '../context/CartContext';
 
 // Force production URL if environment variable is not set
-const API_BASE_URL = 'https://server-deploy-41nq2gj0n-khets-projects-0b14d127.vercel.app/';
+const API_BASE_URL = 'https://server-deploy-tau.vercel.app/';
 
 const Checkout = () => {
   const { cartItems, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
